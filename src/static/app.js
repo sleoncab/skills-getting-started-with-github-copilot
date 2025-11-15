@@ -10,10 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
+      // Limpiar lista de actividades y menú desplegable
       activitiesList.innerHTML = "";
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
-      // Populate activities list
+      // Repoblar actividades y menú
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
@@ -28,14 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="participants-section">
             <strong>Current Participants:</strong>
             <ul class="participants-list">
-              ${details.participants.map(email => `<li>${email}</li>`).join('')}
+              ${details.participants.map(email => `
+                <li class="participant-item" style="list-style-type: none; display: flex; align-items: center; gap: 8px;">
+                  <span class="participant-email">${email}</span>
+                  <span class="delete-icon" title="Remove participant" data-activity="${name}" data-email="${email}" style="cursor: pointer; color: #c62828; margin-left: 8px; font-size: 18px;">&#128465;</span>
+                </li>
+              `).join('')}
             </ul>
           </div>
         `;
 
         activitiesList.appendChild(activityCard);
 
-        // Add option to select dropdown
+        // Agregar opción al menú desplegable
         const option = document.createElement("option");
         option.value = name;
         option.textContent = name;
